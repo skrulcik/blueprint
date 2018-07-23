@@ -16,7 +16,7 @@ window.onload = function() {
     background.fillColor = '#003153';
 
 
-    var path = new Path({
+    const path = new Path({
         // 80% black:
         strokeColor: [0.8],
         strokeWidth: 2,
@@ -33,11 +33,11 @@ window.onload = function() {
         // Technically, such a point could intentionally be added to a path, but
         // this seems to be a cap that is added by Paper.JS. I thought it was on
         // all paths, but it is less consistent than expected.
-        var point = path.lastSegment.point;
+        let lastPoint = path.lastSegment.point;
         if (isNaN(point.x) && isNaN(point.y)) {
-            return path.firstSegment.point;
+            lastPoint = path.firstSegment.point;
         }
-        return point;
+        return lastPoint;
 
     }
 
@@ -48,7 +48,7 @@ window.onload = function() {
             return;
         }
 
-        var lastPoint = lastRealPoint(path);
+        const lastPoint = lastRealPoint(path);
 
         // Add odd-index points horizontal to the last point and even-index points
         // vertical to the last point
@@ -59,11 +59,11 @@ window.onload = function() {
         }
     }
 
-    view.onFrame = function(event) {
+    view.on('frame', function(event) {
         if (event.count % 20 == 0) {
            extendPath(path);
        }
-    }
+    });
 
 // Boilerplate ----------------------------------------------------------------
 	view.draw();
