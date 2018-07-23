@@ -41,7 +41,8 @@ class Animation {
     }
 
     stop() {
-        _activeAnimations = _activeAnimations.filter(function(a) { return a != this; });
+        const idx = _activeAnimations.indexOf(this);
+        _activeAnimations.splice(idx, 1);
     }
 }
 
