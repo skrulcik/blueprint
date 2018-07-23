@@ -52,30 +52,22 @@ window.onload = function() {
         // The new point always starts at the location of the last point, then
         // animates towards a new location
         const lastPoint = lastRealPoint(path);
-        const newPoint = new Point(lastPoint.x, lastPoint.y);
-        const lastIndex = path.segments.length;
-        path.add(newPoint);
+        path.add(new Point(lastPoint.x, lastPoint.y));
+        const newPoint = path.segments[path.segments.length - 1].point;
 
-        let targetPoint;
+        // Slowly move the last point in the path to its destination
+        let step = function(x, y) {
+            newPoint.x = x;
+            newPoint.y = y;
+        }
+
         // Add odd-index points horizontal to the last point and even-index points
         // vertical to the last point
+        let targetPoint;
         if (path.segments.length % 2 === 0) {
             targetPoint = new Point(W * Math.random(), lastPoint.y);
         } else {
             targetPoint = new Point(lastPoint.x, H * Math.random());
-        }
-
-        // const lastSegment = path.segments[path.segments.length - 1];
-        const step = function(x, y) {
-            // path.segments[idx].point.x = x;
-            // path.segments[idx].point.y = y;
-            path.removeSegment(lastIndex);
-            path.add(new Point(x, y));
-            // newPoint.x = x;
-            // newPoint.y = y;
-            // const lastSegment = path.segments[path.segments.length - 2];
-            // lastSegment.point.x = x;
-            // lastSegment.point.y = y;
         }
 
         createLinearMoveAnimation(DRAW_RATE, lastPoint, targetPoint, step);

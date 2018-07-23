@@ -77,7 +77,7 @@ function createLinearMoveAnimation(totalSteps, start, end, stepFunction) {
     const stepWrapper = function(count) {
         // Avoid round-off errors for the last position
         if (count == totalSteps - 1) {
-            stepFunction(end);
+            stepFunction(end.x, end.y);
         } else {
             stepFunction(start.x + xStep * count, start.y + yStep * count);
         }
