@@ -24,10 +24,9 @@
 // rate calculations, so I'll leave that out.
 
 
-
-
 // Global array of animations the frame event handler needs to update
-let _activeAnimations = [];
+const _activeAnimations = [];
+const _doNothing = function() {};
 
 class Animation {
     // Creates a Paper animation that will automatically step on each frame
@@ -35,14 +34,18 @@ class Animation {
     //
     // stepFunction - a no-args function to update the position of the
     // animated object
-    constructor(stepFunction) {
+    // onComplete - (optional) a no-args function that runs once the animation
+    // has completed
+    constructor(stepFunction, onComplete) {
         this.step = stepFunction;
         _activeAnimations.push(this);
+        this.onComplete = onComplete || _doNothing;
     }
 
     stop() {
         const idx = _activeAnimations.indexOf(this);
         _activeAnimations.splice(idx, 1);
+        this.onComplete();
     }
 }
 
@@ -51,7 +54,9 @@ class Animation {
 // totalSteps - # of times to update the animation before stopping
 // stepFunction - given the current step number (from 0 to totalSteps - 1),
 //     updates the animated object
-function createFixedStepAnimation(totalSteps, stepFunction) {
+// onComplete - (optional) a no-args function that runs once the animation has
+// completed
+function createFixedStepAnimation(totalSteps, stepFunction, onComplete) {
     const stepWrapper = function() {
         stepFunction(this._steps);
         this._steps += 1;
@@ -59,7 +64,7 @@ function createFixedStepAnimation(totalSteps, stepFunction) {
             this.stop();
         }
     };
-    const stepAnimation = new Animation(stepWrapper);
+    const stepAnimation = new Animation(stepWrapper, onComplete);
     stepAnimation._steps = 0;
     return stepAnimation;
 }
@@ -71,7 +76,9 @@ function createFixedStepAnimation(totalSteps, stepFunction) {
 // end - the `Point` defining where the line ends
 // stepFunction(x,y) - given the current x, y along the line from start to end,
 //     updates the animated object
-function createLinearMoveAnimation(totalSteps, start, end, stepFunction) {
+// onComplete - (optional) a no-args function that runs once the animation has
+// completed
+function createLinearMoveAnimation(totalSteps, start, end, stepFunction, onComplete) {
     const xStep = (end.x - start.x) / totalSteps;
     const yStep = (end.y - start.y) / totalSteps;
     const stepWrapper = function(count) {
@@ -82,7 +89,7 @@ function createLinearMoveAnimation(totalSteps, start, end, stepFunction) {
             stepFunction(start.x + xStep * count, start.y + yStep * count);
         }
     }
-    return createFixedStepAnimation(totalSteps, stepWrapper);
+    return createFixedStepAnimation(totalSteps, stepWrapper, onComplete);
 }
 
 // TODO support multiple views and/or scope animation creation to views

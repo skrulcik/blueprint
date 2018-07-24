@@ -1,6 +1,7 @@
 // Blueprint JS - Scott Krulcik 2018
 
 const DRAW_RATE = 30; // Frames between drawing new lines
+const PIX_PER_FRAME = 30;
 
 // Boilerplate ----------------------------------------------------------------
 paper.install(window);
