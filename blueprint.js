@@ -71,15 +71,18 @@ window.onload = function() {
             targetPoint = new Point(lastPoint.x, H * Math.random());
         }
 
-        createLinearMoveAnimation(DRAW_RATE, lastPoint, targetPoint, step);
+        createLinearMoveAnimation(DRAW_RATE, lastPoint, targetPoint, step, () => extendPath(path));
     }
 
     initializeAnimationFramework(view);
 
     view.on('frame', function(event) {
-       if (event.count % DRAW_RATE == 0) {
-           extendPath(path);
-       }
+        // On the first frame event, start drawing the path. Two points are
+        // needed to start the animation.
+        if (event.count == 0) {
+            extendPath(path);
+            extendPath(path);
+        }
     });
 
 // Boilerplate ----------------------------------------------------------------

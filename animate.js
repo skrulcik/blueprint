@@ -26,7 +26,7 @@
 
 // Global array of animations the frame event handler needs to update
 const _activeAnimations = [];
-const _doNothing = function() {};
+const _doNothing = () => {};
 
 class Animation {
     // Creates a Paper animation that will automatically step on each frame
