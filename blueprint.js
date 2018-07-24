@@ -1,6 +1,5 @@
 // Blueprint JS - Scott Krulcik 2018
 
-const DRAW_RATE = 30; // Frames between drawing new lines
 const PIX_PER_FRAME = 30;
 
 // Boilerplate ----------------------------------------------------------------
@@ -46,7 +45,7 @@ window.onload = function() {
     function extendPath(path) {
         if (path.isEmpty()) {
             // If the path has not been started, start it at a random point
-            path.add(new Point(W, H) * Point.random());
+            path.add(new Point(W * Math.random(), H * Math.random()));
             return;
         }
 
@@ -57,7 +56,7 @@ window.onload = function() {
         const newPoint = path.segments[path.segments.length - 1].point;
 
         // Slowly move the last point in the path to its destination
-        let step = function(x, y) {
+        const step = function(x, y) {
             newPoint.x = x;
             newPoint.y = y;
         }
@@ -71,7 +70,11 @@ window.onload = function() {
             targetPoint = new Point(lastPoint.x, H * Math.random());
         }
 
-        createLinearMoveAnimation(DRAW_RATE, lastPoint, targetPoint, step, () => extendPath(path));
+        // Compute how many frames the animation should take
+        let duration = lastPoint.getDistance(targetPoint) / PIX_PER_FRAME;
+        duration = Math.round(duration);
+
+        createLinearMoveAnimation(duration, lastPoint, targetPoint, step, () => extendPath(path));
     }
 
     initializeAnimationFramework(view);
