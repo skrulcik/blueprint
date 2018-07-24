@@ -1,6 +1,7 @@
 // Blueprint JS - Scott Krulcik 2018
 
-const PIX_PER_FRAME = 30;
+const PIX_PER_FRAME = 10;
+const NUM_PATHS = 3;
 
 // Boilerplate ----------------------------------------------------------------
 paper.install(window);
@@ -17,12 +18,14 @@ window.onload = function() {
     background.sendToBack();
     background.fillColor = '#003153';
 
-
-    const path = new Path({
-        // 80% black:
-        strokeColor: [0.8],
-        strokeWidth: 2,
-    });
+    const paths = [];
+    for (let i = 0; i < NUM_PATHS; i++) {
+        paths.push(new Path({
+            // 80% black:
+            strokeColor: [1],
+            strokeWidth: 2,
+        }));
+    }
 
     // Retrieves the last user-defined point in an open path. Paper ends such paths
     // with a (NaN, NaN) point, which is not useful.
@@ -83,8 +86,10 @@ window.onload = function() {
         // On the first frame event, start drawing the path. Two points are
         // needed to start the animation.
         if (event.count == 0) {
-            extendPath(path);
-            extendPath(path);
+            for (let path of paths) {
+                extendPath(path);
+                extendPath(path);
+            }
         }
     });
 
